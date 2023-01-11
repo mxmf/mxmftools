@@ -181,8 +181,8 @@ def plotdos(
     else:
         single_plot(dose, dos, ax, spin, colorlist[0], fill, alphalist[0], gradient)
 
-    ax.set_xlabel("Energy(eV)")
-    ax.set_ylabel("Density(states/eV)")
+    ax.set_xlabel("Energy (eV)")
+    ax.set_ylabel("Density (states/eV)")
     ax.yaxis.set_major_locator(AutoLocator())
     ax.yaxis.set_minor_locator(AutoMinorLocator(2))
     ax.xaxis.set_major_locator(AutoLocator())

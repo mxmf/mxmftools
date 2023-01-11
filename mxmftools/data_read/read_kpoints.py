@@ -5,62 +5,44 @@ import re
 class ReadKpoints(object):
     def __init__(self, file="KPOINTS"):
         self.file = file
+        self.symbols = []
+        self.division = None
+        self.k_coors = []
         self.lines = self.readlines()
 
     def readlines(self):
-        try:
-            with open(self.file) as fk:
-                lines = fk.readlines()
-        except:
-            print(
-                'open the Kponts file you specified failed , try to  read the "KPOINTS" in current directory'
-            )
-            try:
-                with open("KPOINTS") as fk:
-                    lines = fk.readlines()
-            except:
-                print('failed to read the "KPOINTS" in current directory')
-                lines = None
-        return lines
-
-    @property
-    def division(self):
-        try:
-            return int(self.lines[1])
-        except:
-            return None
-
-    @property
-    def symbols(self):
-        symbollist = []
-        inputlist = []
-        try:
-            for line in self.lines:
-                if r"!" in line:
-                    symbol = re.findall(r" \! (.*)", line)[0]
-                    if inputlist == []:
-                        inputlist.append(symbol)
-                    else:
-                        if symbol != inputlist[-1]:
-                            inputlist.append(symbol)
-                    if "$" in symbol:
-                        symbol = r"\rm {}".format(symbol)
-                    else:
-                        symbol = r"$\rm {}$".format(symbol)
-                    if symbollist == []:
-                        symbollist.append(symbol)
-                    else:
-                        if symbol != symbollist[-1]:
-                            symbollist.append(symbol)
-            print(
-                "The high symmetry point used in the calculation is: {}".format(
-                    inputlist
-                )
-            )
-        except:
-            print("The high symmetry point used in the calculation is: []")
-        return symbollist
+        with open(self.file) as fk:
+            line_num = 0
+            while line_num < 4:
+                line = fk.readline()
+                if line.split() == []:
+                    ...
+                else:
+                    line_num = line_num + 1
+                    if line_num == 2:
+                        self.division = int(line)
+            while True:
+                line = fk.readline()
+                if not line:
+                    break
+                if line.split() == []:
+                    ...
+                else:
+                    k_coor = [float(i) for i in line.split()[:3]]
+                    if self.k_coors == [] or k_coor != self.k_coors[-1]:
+                        self.k_coors.append(k_coor)
+                        if len(line.split()) == 4:
+                            symbol = line.split()[3]
+                            if symbol not in [chr(i) for i in range(65, 91)] + [
+                                chr(i) for i in range(97, 123)
+                            ]:
+                                self.symbols.append(f"${symbol}$")
+                            else:
+                                self.symbols.append(symbol)
 
 
 if __name__ == "__main__":
     data = ReadKpoints("KPOINTS")
+    print(data.division)
+    print(data.k_coors)
+    print(data.symbols)

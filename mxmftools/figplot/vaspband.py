@@ -72,7 +72,7 @@ def plot_band(xlist, ylist, ax, xrange, yrange, xticks, colorlist, spin, label):
         colorlist = ["red", "blue"]
     if ax is None:
         fig, ax = plt.subplots()
-    ax.set_ylabel("Energy(eV)")
+    ax.set_ylabel("Energy (eV)")
     ax.set_ylim(yrange)
     ax.set_xlim(xlist[0], xlist[-1])
     ax.axhline(
@@ -196,7 +196,7 @@ def plot_proband(
     linearray, plotarray = protuple
     if ax is None:
         fig, ax = plt.subplots()
-    ax.set_ylabel("Energy(eV)")
+    ax.set_ylabel("Energy (eV)")
     ax.set_ylim(yrange)
     ax.set_xlim(xlist[0], xlist[-1])
     ax.axhline(
@@ -606,5 +606,5 @@ def plotband(
             pband,
             spin,
             color,
-            colorbar,
+            cb,
         )

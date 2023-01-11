@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="mxmftools",
-    version="0.0.1",
+    version="0.0.3",
     author="mxmf",
     author_email="mxmf521@outlook.com",
     description="some scripts",
@@ -19,8 +19,7 @@ setuptools.setup(
         "click-bash4.2-completion",
         "h5py",
         "lxml",
-        "click >= 8.1.0"
-        
+        "click >= 8.1.0",
     ],
     packages=setuptools.find_packages(),
     package_data={
