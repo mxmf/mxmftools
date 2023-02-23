@@ -1,4 +1,4 @@
-from ..cli import band
+from ..cli.vasp import band
 from ..figplot import plotband
 
 

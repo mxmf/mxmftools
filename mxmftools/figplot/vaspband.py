@@ -239,7 +239,7 @@ def plot_proband(
             else:
                 proplot1(xlist, ylist[0], plotarray[0], cmap1, ax, fig, colorbar)
         elif spin == 0:
-            proplot1(xlist, ylist[0], plotarray[0], cmap1, ax, fig)
+            proplot1(xlist, ylist[0], plotarray[0], cmap1, ax, fig, colorbar)
         else:
             if len(plotarray) == 4:
                 proplot2(xlist, ylist[0], plotarray[spin], cmap2, ax, fig, colorbar)
