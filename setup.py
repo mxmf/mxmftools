@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="mxmftools",
-    version="0.0.1",
+    version="0.0.4",
     author="mxmf",
     author_email="mxmf521@outlook.com",
     description="some scripts",
