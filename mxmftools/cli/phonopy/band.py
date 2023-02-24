@@ -18,4 +18,5 @@ def band():
 
     fig, ax = plt.subplots()
     plot_band(kpoints.k_coors, kpoints.symbols, ax, kpoints.division)
+    plt.savefig("phonon.png")
     plt.show()
