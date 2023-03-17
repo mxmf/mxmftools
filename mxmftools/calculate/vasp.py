@@ -27,8 +27,8 @@ list_float_keys.append("magmom")
 default_calcdic = {
     "encut": 500,
     "setups": "recommended",
-    "kpts": (13, 13, 1),
-    "kpar": 4,
+    "kpts": (12, 12, 1),
+    "ncore": 4,
     "xc": "PBE",
     "prec": "Accurate",
     "algo": "normal",
@@ -39,7 +39,7 @@ default_calcdic = {
     "nelm": 200,
     "ediff": 1e-6,
     "ediffg": -0.01,
-    "isym": -1,
+    "isym": 2,
     "lorbit": 11,
     "lwave": False,
     "lreal": "Auto",
@@ -71,7 +71,7 @@ def write_kpoints_opt(path, dir=".", num=40):
     return None
 
 
-def write_kpoints(path, dir=".", num=200):
+def write_kpoints(path, dir=".", num=40):
     if dir[-1] == "/":
         file = "{}KPOINTS".format(dir)
     else:
@@ -114,8 +114,7 @@ def isp_relax(atoms, calcdic, calcdir="isp-relax"):
         ase atoms
     """
     relax_dict = {
-        "nsw": 60,
-        "isym": 2,
+        "nsw": 100,
         "ibrion": 2,
         "isif": 3,
     }
@@ -140,9 +139,7 @@ def isp_relax(atoms, calcdic, calcdir="isp-relax"):
     atoms.write(f"{calcdir}/POSCAR")
     vasprun("vasp_std", calcdir)
     new_atoms = read(f"{calcdir}CONTCAR")
-    data = h5py.File(f"{calcdir}vaspout.h5")
-    e = data["intermediate/ion_dynamics/energies"][:]
-    return (new_atoms, e)
+    return new_atoms
 
 
 def isp_scf(atoms, calcdic, calcdir="isp-scf", path=None):
@@ -157,7 +154,7 @@ def isp_scf(atoms, calcdic, calcdir="isp-scf", path=None):
     calcdir : str, optional
         directary of calculate, by default "isp-scf"
     path:
-        band_path
+        use KPOINTS_OPT  to caculate band
 
     Returns
     -------
@@ -187,14 +184,13 @@ def isp_scf(atoms, calcdic, calcdir="isp-scf", path=None):
     vasprun("vasp_std", calcdir)
     data = h5py.File(f"{calcdir}vaspout.h5")
     e = data["intermediate/ion_dynamics/energies"][:]
-    moments = data["intermediate/ion_dynamics/magnetism/moments"][:]
-    return e, moments
+    return e
 
 
 def isp_band(
-    atoms, calcdic, prev_dir="isp-scf", calcdir="isp-band", path=None, line=False
+    atoms, calcdic, prev_dir="isp-scf", calcdir="isp-band", path=None, line=True, num=50
 ):
-    """soc_scf
+    """isp-band
 
     Parameters
     ----------
@@ -210,8 +206,11 @@ def isp_band(
         isp_scf directory
 
     path:
-        band_path
-
+        use KPOINTS_OPT  to caculate band
+    line:
+        whether use line mode, by default True
+    num:
+        num of kpoints in line mode, by default 50
     Returns
     -------
     _type_
@@ -245,7 +244,7 @@ def isp_band(
     ase_input_gener.write_incar(atoms, calcdir)
     ase_input_gener.write_potcar(directory=calcdir)
     if line:
-        write_kpoints(path, calcdir)
+        write_kpoints(path, calcdir, num)
     else:
         np.savetxt(
             f"{calcdir}KPOINTS",
@@ -283,7 +282,7 @@ def soc_scf(
         isp_scf directory
 
     path:
-        band_path
+        use KPOINTS_OPT  to caculate band
 
     Returns
     -------
@@ -358,7 +357,7 @@ def soc_e(
         isp_scf directory
 
     path:
-        band_path
+        use KPOINTS_OPT  to caculate band
 
     Returns
     -------
@@ -426,6 +425,7 @@ def soc_band(
     saxis=[0, 0, 1],
     path=None,
     line=True,
+    num=50,
 ):
     """soc_scf
 
@@ -445,8 +445,10 @@ def soc_band(
         isp_scf directory
 
     path:
-        band_path
+        use KPOINTS_OPT  to caculate band
 
+    num:
+        band num, by default is 50
     Returns
     -------
     _type_
@@ -496,7 +498,7 @@ def soc_band(
             fi.write("\n")
     ase_input_gener.write_potcar(directory=calcdir)
     if line:
-        write_kpoints(path, calcdir)
+        write_kpoints(path, calcdir, num)
     else:
         np.savetxt(
             f"{calcdir}KPOINTS",

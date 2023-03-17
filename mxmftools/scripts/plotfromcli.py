@@ -5,6 +5,7 @@ from ..figplot import plotband
 def plotband_from_cli_str(data, str, fig=None, ax=None):
     import matplotlib as mpl
     import mxmftools
+
     try:
         mpl.rc_file(f"~/.config/mxmf/matplotlibrc")
     except:
