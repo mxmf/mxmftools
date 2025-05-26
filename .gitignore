@@ -12,3 +12,5 @@ wheels/
 python-type-stubs
 .envrc
 .python-version
+tests/4.0
+justfile
