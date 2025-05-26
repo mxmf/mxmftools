@@ -2,7 +2,7 @@
   description = "Python development environment with uv";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     helix-erasin = {
@@ -16,13 +16,14 @@
       let
         pkgs = import nixpkgs {
           system = system;
-          config.allowUnfree = true;
-          cudaSupport = true;
+          # config.allowUnfree = true;
+          # cudaSupport = true;
         };
         pkgs-unstable = import nixpkgs {
+          # pkgs = import nixpkgs {
           system = system;
-          config.allowUnfree = true;
-          cudaSupport = true;
+          # config.allowUnfree = true;
+          # cudaSupport = true;
         };
 
       in
@@ -35,7 +36,7 @@
             basedpyright
             ruff
 
-            cudatoolkit
+            # cudatoolkit
             # cudaPackages.cudatoolkit # CUDA Toolkit für GPU-Unterstützung
             # cudaPackages.cudnn # CUDA Deep Neural Network library
             # (pkgs-unstable.linuxPackages.nvidia_x11)
@@ -47,8 +48,12 @@
             zlib
 
             python3Packages.pyqt5
+            python3Packages.ase
+            python3Packages.matplotlib
+            # python3Packages.tkinter
             qt5.qtwayland
             libsForQt5.qt5.qtbase
+            # tk
 
 
           ];
@@ -56,10 +61,12 @@
 
           MPLBACKEND = "QtAgg";
 
-          QT_PLUGIN_PATH = "${pkgs.qt5.qtbase}/${pkgs.qt5.qtbase.qtPluginPrefix}";
+          # QT_PLUGIN_PATH = "${pkgs.qt5.qtbase}/${pkgs.qt5.qtbase.qtPluginPrefix}";
+          # QT_PLUGIN_PATH = "${pkgs.qt5.qtbase}/${pkgs.qt5.qtbase.qtPluginPrefix}";
+          # QT_PLUGIN_PATH = ".venv/lib/python3.10/site-packages/PyQt5/Qt5/plugins";
 
           # LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath buildInputs;
-          CUDA_PATH = pkgs.cudatoolkit;
+          # CUDA_PATH = pkgs.cudatoolkit;
           NVIDIA_DRIVERS = "/run/opengl-driver/lib";
           LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath (buildInputs ++ [ "/run/opengl-driver" ]);
           EXTRA_LDFLAGS = "-L/lib -L/run/opengl-driver/lib";

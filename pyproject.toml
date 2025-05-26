@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.scripts]
-mxmf = "mxmftools.cli:app"
+mxmf = "mxmftools:app"
 
 [build-system]
 requires = ["pdm-backend"]
