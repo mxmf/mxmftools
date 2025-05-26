@@ -24,7 +24,8 @@ def subfig(
                 f"""
                 import matplotlib.pyplot as plt
 
-                from mxmftools.utils import plot_from_cli_str
+
+                from mxmftools.utils.plot_utils import plot_from_cli_str
 
                 fig, axs = plt.subplots(nrows={rows}, ncols={cols} {share})
                 axs = axs.flat
@@ -40,7 +41,7 @@ def subfig(
         fo.write("\n")
 
         for i, j in itertools.product(range(rows), range(cols)):
-            fo.write(f'plot{i + 1}{j + 1}_args=  "vasp band fm_band.h5 -yr -2 2"\n')
+            fo.write(f'plot{i + 1}{j + 1}_args=  "vasp band vaspout.h5 -yr -2 2"\n')
         fo.write("\n")
 
         for i, j in itertools.product(range(rows), range(cols)):
