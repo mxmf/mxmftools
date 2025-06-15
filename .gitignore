@@ -14,3 +14,4 @@ python-type-stubs
 .python-version
 tests/4.0
 justfile
+tests

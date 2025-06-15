@@ -48,7 +48,7 @@
             zlib
 
             python3Packages.pyqt5
-            python3Packages.ase
+            # python3Packages.ase
             python3Packages.matplotlib
             # python3Packages.tkinter
             qt5.qtwayland
@@ -71,12 +71,14 @@
           LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath (buildInputs ++ [ "/run/opengl-driver" ]);
           EXTRA_LDFLAGS = "-L/lib -L/run/opengl-driver/lib";
 
+
           shellHook = ''
+            export ABACUS_PP_PATH="$HOME/.config/mxmftools/pp/sg15_oncv_upf_2020-02-06"
+            export ABACUS_ORBITAL_PATH="$HOME/.config/mxmftools/orbitals/SG15-Version1p0__StandardOrbitals-Version2p0"
 
             if [ ! -d ".venv" ]; then
               uv venv .venv
             fi
-            
             source .venv/bin/activate
             echo "uv pip env ready"
 

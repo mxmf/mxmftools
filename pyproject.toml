@@ -5,11 +5,15 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "abacus-plot",
+    "ase",
     "h5py>=3.13.0",
     "lxml>=5.4.0",
     "matplotlib>=3.10.3",
     "numpy>=2.2.6",
+    "pooch>=1.8.2",
     "rich>=14.0.0",
+    "seekpath>=2.1.0",
     "typer>=0.15.4",
 ]
 
@@ -20,8 +24,18 @@ mxmf = "mxmftools:app"
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
+[tool.pdm.build]
+includes = ["src"]
+excludes = ["tests", "tests/*", "*/tests"]
+
 [tool.pyright]
 stubPath = "./python-type-stubs/stubs"
+
+
+[tool.uv.sources]
+abacus-plot = { git = "https://github.com/abacusmodeling/abacus-develop.git", subdirectory = "tools/plot-tools" }
+ase = { git = "https://gitlab.com/1041176461/ase-abacus.git" }
+
 # typeCheckingMode = "off"
 
 [dependency-groups]
