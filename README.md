@@ -14,7 +14,7 @@
 ```bash
 pip install git+https://gitlab.com/1041176461/ase-abacus.git
 pip install abacus-plot@https://github.com/abacusmodeling/abacus-develop.git#subdirectory=tools/plot-tools
-pip install mxmftools@github.com:mxmf/mxmftools.git
+pip install mxmftools@https://github.com/mxmf/mxmftools.git
 ```
 
 ### use uv(recommended)
@@ -22,7 +22,7 @@ pip install mxmftools@github.com:mxmf/mxmftools.git
 ```bash
 uv add git+https://gitlab.com/1041176461/ase-abacus.git
 uv add abacus-plot@https://github.com/abacusmodeling/abacus-develop.git#subdirectory=tools/plot-tools
-uv add mxmftools@github.com:mxmf/mxmftools.git
+uv add mxmftools@https://github.com/mxmf/mxmftools.git
 ```
 
 ## License
