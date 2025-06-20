@@ -1,13 +1,11 @@
-import subprocess
-from typing import Literal, final
-
-from dataclasses import dataclass
-from ase.calculators.abacus import Abacus, AbacusProfile
-from ase import Atoms
-from pathlib import Path
 import os
+import subprocess
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Literal, TypedDict, final
 
-from typing import TypedDict
+from ase import Atoms
+from ase.calculators.abacus import Abacus, AbacusProfile
 
 
 class KptsFromAse(TypedDict):
@@ -81,6 +79,7 @@ class AbacusParams:
         # "Gamma, MP, Direct, Cartesian, or Line."
         kmode: Literal["Gamma", "MP", "Cartesian", "Direct", "Line"] = "Gamma",
         knumbers: list[int] | None = None,
+        vdw_method: Literal["d2", "d3_0", "d3_bj", "none"] = "none",
     ) -> None:
         local_vars = locals()
         exclude_keys = ["orbital_corr", "hubbard_u", "spintype", "self"]
