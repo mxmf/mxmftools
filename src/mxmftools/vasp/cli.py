@@ -13,7 +13,6 @@ app = typer.Typer(no_args_is_help=True)
 @app.command("band")
 @dataclass_cli
 def band(params: BandParams):
-    print(params)
     from ..utils import plot_utils
     from .band.bandplot import BandPlot
 
