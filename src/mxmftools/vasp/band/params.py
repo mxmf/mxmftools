@@ -3,11 +3,9 @@ from pathlib import Path
 from typing import Annotated
 
 import click
+import typer
 
 from mxmftools.utils.common_params import FigSetBase, HeatFigBase
-
-
-import typer
 
 
 @dataclass

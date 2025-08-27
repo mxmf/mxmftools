@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Annotated
+
 import click
 import typer
 
@@ -49,8 +50,9 @@ def nbands_ewin(
     fermi: Annotated[float, typer.Option("--fermi", "-f")] = 0,
     spin: Annotated[int, typer.Option("--spin", "-s", min=0, max=1)] = 0,
 ):
-    from .dataread import Readvaspout, ReadVasprun
     import rich
+
+    from .dataread import Readvaspout, ReadVasprun
 
     if vaspfileformat == "h5":
         eigenvalues = Readvaspout(file).eigenvalues[spin]
@@ -96,8 +98,8 @@ def gap(
         ),
     ] = None,
 ):
-    from .dataread import Readvaspout, ReadVasprun
     from ..vasp.vasp_utils import get_gap
+    from .dataread import Readvaspout, ReadVasprun
 
     if vaspfileformat == "h5":
         data = Readvaspout(file)

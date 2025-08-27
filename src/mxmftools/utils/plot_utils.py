@@ -4,8 +4,6 @@ from matplotlib import colors
 from typing_extensions import override
 
 if TYPE_CHECKING:
-    import sys
-
     import matplotlib.pyplot as plt
     from matplotlib import figure
 
@@ -211,9 +209,19 @@ def save_show(
     plot_cls: type[FigPlotBase],
     params: "FigSetBase",
 ):
+    from importlib import resources
+
+    import matplotlib as mpl
+    import matplotlib.pyplot as plt
+
+    if params.matplotlibrc.exists():
+        mpl.rc_file(params.matplotlibrc)
+    else:
+        with resources.path("mxmftools", "hb.style") as rc_path:
+            mpl.rc_file(rc_path)
+
     if params.from_cli is False:
         return (plot_cls, params)
-    import matplotlib.pyplot as plt
 
     fig, ax = plt.subplots()
 

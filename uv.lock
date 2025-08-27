@@ -225,6 +225,12 @@ wheels = [
 ]
 
 [[package]]
+name = "importlib"
+version = "1.0.4"
+source = { registry = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple/" }
+sdist = { url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/packages/31/77/3781f65cafe55480b56914def99022a5d2965a4bb269655c89ef2f1de3cd/importlib-1.0.4.zip", hash = "sha256:b6ee7066fea66e35f8d0acee24d98006de1a0a8a94a8ce6efe73a9a23c8d9826", size = 7074, upload-time = "2016-08-31T19:40:00.728Z" }
+
+[[package]]
 name = "kiwisolver"
 version = "1.4.8"
 source = { registry = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple/" }
@@ -444,6 +450,7 @@ dependencies = [
     { name = "colorcet" },
     { name = "contourpy" },
     { name = "h5py" },
+    { name = "importlib" },
     { name = "lxml" },
     { name = "matplotlib" },
     { name = "numpy" },
@@ -467,6 +474,7 @@ requires-dist = [
     { name = "colorcet", specifier = ">=3.1.0" },
     { name = "contourpy", specifier = "<1.3.3" },
     { name = "h5py", specifier = ">=3.13.0" },
+    { name = "importlib", specifier = ">=1.0.4" },
     { name = "lxml", specifier = ">=5.4.0" },
     { name = "matplotlib", specifier = ">=3.10.3" },
     { name = "numpy", specifier = ">=2,<2.3" },
