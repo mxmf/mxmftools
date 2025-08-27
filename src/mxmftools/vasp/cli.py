@@ -16,19 +16,7 @@ def band(params: BandParams):
     from ..utils import plot_utils
     from .band.bandplot import BandPlot
 
-    if params.from_cli is False:
-        return (BandPlot, params)
-
-    import matplotlib.pyplot as plt
-
-    from matplotlib.figure import Figure
-    from matplotlib.axes import Axes
-
-    fig: Figure
-    ax: Axes
-    fig, ax = plt.subplots()
-    _ = BandPlot(params, fig, ax)
-    plot_utils.save_show(params)
+    return plot_utils.save_show(BandPlot, params)
 
 
 @app.command("dos")
@@ -39,14 +27,7 @@ def dos(
     from ..utils import plot_utils
     from .dos.dosplot import DosPlot
 
-    if params.from_cli is False:
-        return (DosPlot, params)
-
-    import matplotlib.pyplot as plt
-
-    fig, ax = plt.subplots()
-    DosPlot(params, fig, ax)
-    plot_utils.save_show(params)
+    return plot_utils.save_show(DosPlot, params)
 
 
 @app.command("nbands_ewin")

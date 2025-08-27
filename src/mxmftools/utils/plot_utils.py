@@ -1,21 +1,21 @@
 from typing import TYPE_CHECKING
+
+from matplotlib import colors
 from typing_extensions import override
 
 if TYPE_CHECKING:
     import sys
 
+    import matplotlib as mpl
     import matplotlib.pyplot as plt
     import numpy as np
-    from numpy.typing import ArrayLike
     from matplotlib import figure
 
     # from ..cli import utils as cliutils
     from . import common_params
 
-import matplotlib as mpl
 
-
-class MyCustomNormalize(mpl.colors.Normalize):
+class MyCustomNormalize(colors.Normalize):
     """
     Modified from https://stackoverflow.com/questions/7404116/defining-the-midpoint-of-a-colormap-in-matplotlib
     """
@@ -24,7 +24,7 @@ class MyCustomNormalize(mpl.colors.Normalize):
         self, vmin: float, vmax: float, midpoint: float = 0.0, clip: bool = False
     ):
         self.midpoint: float = midpoint
-        mpl.colors.Normalize.__init__(self, vmin, vmax, clip)
+        colors.Normalize.__init__(self, vmin, vmax, clip)
 
     @override
     def __call__(self, value, clip: bool | None = None):
@@ -201,9 +201,23 @@ class HeatSet:
         cbar.ax.set_ylim(self.vmin, self.vmax)
 
 
-def save_show(params: "common_params.FigSetBase"):
+class FigPlotBase:
+    def __init__(
+        self, params: "common_params.FigSetBase", fig: "figure.Figure", ax: "plt.Axes"
+    ): ...
+
+
+def save_show(
+    plot_cls: type[FigPlotBase],
+    params: "common_params.FigSetBase",
+):
+    if params.from_cli is False:
+        return (plot_cls, params)
     import matplotlib.pyplot as plt
 
+    fig, ax = plt.subplots()
+
+    plot_cls(params, fig, ax)
     for savefile in params.save.split():
         plt.savefig(savefile)
     if params.show:
