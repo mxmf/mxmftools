@@ -1,10 +1,12 @@
 from typing import TYPE_CHECKING
+from typing_extensions import override
 
 if TYPE_CHECKING:
     import sys
 
     import matplotlib.pyplot as plt
     import numpy as np
+    from numpy.typing import ArrayLike
     from matplotlib import figure
 
     # from ..cli import utils as cliutils
@@ -18,11 +20,14 @@ class MyCustomNormalize(mpl.colors.Normalize):
     Modified from https://stackoverflow.com/questions/7404116/defining-the-midpoint-of-a-colormap-in-matplotlib
     """
 
-    def __init__(self, vmin, vmax, midpoint=0.0, clip=False):
-        self.midpoint = midpoint
+    def __init__(
+        self, vmin: float, vmax: float, midpoint: float = 0.0, clip: bool = False
+    ):
+        self.midpoint: float = midpoint
         mpl.colors.Normalize.__init__(self, vmin, vmax, clip)
 
-    def __call__(self, value, clip=None):
+    @override
+    def __call__(self, value, clip: bool | None = None):
         import numpy as np
 
         normalized_min = (
@@ -55,8 +60,8 @@ class MyCustomNormalize(mpl.colors.Normalize):
 
 class AxesSet:
     def __init__(self, ax: "plt.Axes", params: "common_params.FigSetBase"):
-        self.ax = ax
-        self.params = params
+        self.ax: plt.Axes = ax
+        self.params: "common_params.FigSetBase" = params
         self.set_title()
         self.set_labels()
         self.set_xticks()
@@ -66,7 +71,6 @@ class AxesSet:
 
     def set_title(self):
         self.ax.set_title(self.params.title) if self.params.title is not None else ...
-        ...
 
     def set_labels(self):
         self.ax.set_xlabel(

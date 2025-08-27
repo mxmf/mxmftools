@@ -32,6 +32,7 @@
             zlib
 
             python3Packages.pyqt6
+            python3Packages.matplotlib
             qt6.full
 
           ];

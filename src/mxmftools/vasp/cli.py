@@ -19,9 +19,6 @@ def band(params: BandParams):
     if params.from_cli is False:
         return (BandPlot, params)
 
-    import matplotlib
-
-    matplotlib.use("qtagg")
     import matplotlib.pyplot as plt
 
     from matplotlib.figure import Figure
@@ -42,9 +39,6 @@ def dos(
     from ..utils import plot_utils
     from .dos.dosplot import DosPlot
 
-    import matplotlib
-
-    matplotlib.use("qtagg")
     if params.from_cli is False:
         return (DosPlot, params)
 

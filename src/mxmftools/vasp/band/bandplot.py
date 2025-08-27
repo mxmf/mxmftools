@@ -5,10 +5,10 @@ from typing import TYPE_CHECKING, final
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+
 import numpy as np
 from matplotlib import figure
 from matplotlib.collections import LineCollection
-from numpy._core.multiarray import DATETIMEUNITS
 
 from ...utils import plot_utils
 
