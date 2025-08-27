@@ -1,6 +1,5 @@
 import typer
 
-from .abacus.cli import app as abacus_app
 from .subfig import subfig
 from .vasp.cli import app as vasp_app
 
@@ -11,7 +10,6 @@ app = typer.Typer(
 )
 
 app.add_typer(vasp_app, name="vasp")
-app.add_typer(abacus_app, name="abacus")
 _ = app.command()(subfig)
 
 
