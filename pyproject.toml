@@ -32,4 +32,5 @@ dev = [
     "lxml-stubs>=0.5.1",
     "matplotlib-stubs>=0.3.2",
     "mypy>=1.15.0",
+    "pyqt6>=6.9.1",
 ]
