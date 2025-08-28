@@ -55,10 +55,9 @@ def nbands_ewin(
     from .dataread import Readvaspout, ReadVasprun
 
     if vaspfileformat == "h5":
-        eigenvalues = Readvaspout(file).eigenvalues[spin]
+        eigenvalues = Readvaspout(file).eigenvalues[spin] - fermi
     else:
-        eigenvalues = ReadVasprun(file).eigenvalues[spin]
-
+        eigenvalues = ReadVasprun(file).eigenvalues[spin] - fermi
     emin, emax = energy_windows
     band_max = eigenvalues.max(axis=0)
     band_min = eigenvalues.min(axis=0)
