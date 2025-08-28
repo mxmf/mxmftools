@@ -17,6 +17,7 @@ dependencies = [
     "colorcet>=3.1.0",
     "scienceplots>=2.1.1",
     "importlib>=1.0.4",
+    "tqdm>=4.67.1",
 ]
 
 [project.scripts]
@@ -30,10 +31,14 @@ build-backend = "uv_build"
 includes = ["src"]
 excludes = ["tests", "tests/*", "*/tests"]
 
+[tool.uv.sources]
+microsoft-python-type-stubs = { git = "https://github.com/microsoft/python-type-stubs.git" }
+
 [dependency-groups]
 dev = [
     "lxml-stubs>=0.5.1",
-    "matplotlib-stubs>=0.3.2",
+    # "matplotlib-stubs>=0.3.2",
+    "microsoft-python-type-stubs",
     "mypy>=1.15.0",
     "pyqt6>=6.9.1",
 ]

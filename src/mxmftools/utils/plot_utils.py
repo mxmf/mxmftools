@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING, cast
+from pathlib import Path
 
 from matplotlib import colors
 from typing_extensions import override
@@ -7,7 +8,6 @@ if TYPE_CHECKING:
     import matplotlib.pyplot as plt
     from matplotlib import figure
 
-    # from ..cli import utils as cliutils
     from .common_params import FigSetBase, HeatFigBase
 
 
@@ -205,25 +205,32 @@ class FigPlotBase:
     def __init__(self, params: "FigSetBase", fig: "figure.Figure", ax: "plt.Axes"): ...
 
 
+def set_style(rc_file: Path | None = None):
+    from importlib import resources
+    import matplotlib as mpl
+
+    if rc_file is None or not rc_file.exists():
+        with resources.path("mxmftools", "hb.style") as rc_path:
+            mpl.rc_file(rc_path)
+    else:
+        mpl.rc_file(rc_file)
+
+
 def save_show(
     plot_cls: type[FigPlotBase],
     params: "FigSetBase",
+    fig: "figure.Figure | None",
+    ax: "plt.Axes | None",
 ):
-    from importlib import resources
-
-    import matplotlib as mpl
     import matplotlib.pyplot as plt
-
-    if params.matplotlibrc.exists():
-        mpl.rc_file(params.matplotlibrc)
-    else:
-        with resources.path("mxmftools", "hb.style") as rc_path:
-            mpl.rc_file(rc_path)
 
     if params.from_cli is False:
         return (plot_cls, params)
 
-    fig, ax = plt.subplots()
+    if fig is None and ax is None:
+        fig, ax = plt.subplots()
+    if fig is None or ax is None:
+        raise ValueError("must set fig and ax")
 
     plot_cls(params, fig, ax)
     for savefile in params.save.split():
@@ -246,10 +253,68 @@ def plot_from_cli_str(str_params: str, fig, ax):
     args = params_list[1:]
     app = importlib.import_module(f"mxmftools.{info_name}.cli").app
 
-    print(params_list)
-
     cmd: click.Command = get_command(app)
     # print(cmd.make_context(info_name, args))
     # rv = get_command(app).invoke(cmd.make_context(info_name, args))
     rv = get_command(app).invoke(cmd.make_context(info_name, args))
     rv[0](rv[1], fig, ax)
+
+
+def multi_plot(plot_cls: type[FigPlotBase], params: "FigSetBase"):
+    from pathlib import Path
+
+    set_style(params.matplotlibrc)
+
+    import matplotlib.pyplot as plt
+
+    files = list(Path(".").rglob(params.file))
+    if len(files) == 0:
+        raise ValueError("No files found. Ensure the file is correct.")
+    elif len(files) == 1:
+        return save_show(plot_cls, params, None, None)
+
+    else:
+        if not params.from_cli:
+            raise ValueError("Do not specify multiple files in script mode.")
+
+    savedir = Path(params.save) if params.save != "" else None
+    params.save = ""
+
+    if params.show:
+        params.show = False
+        current_index = [0]
+        num_figures = len(files)
+        fig, ax = plt.subplots()
+
+        def plot_func(files: list[Path], params: "FigSetBase", index: int):
+            params.file = str(files[index])
+            ax.clear()
+            save_show(plot_cls, params, fig, ax)
+            ax.set_title(f"{params.file}")
+
+        plot_func(files, params, 0)
+
+        fig.canvas.draw()
+
+        def on_key(event):
+            if event.key in ["right", "down", "j", "l"]:
+                current_index[0] = (current_index[0] + 1) % num_figures
+            elif event.key in ["left", "up", "k", "h"]:
+                current_index[0] = (current_index[0] - 1) % num_figures
+            else:
+                return
+
+            plot_func(files, params, current_index[0])
+            fig.canvas.draw()
+
+        fig.canvas.mpl_connect("key_press_event", on_key)
+
+        plt.show()
+    if savedir is not None:
+        from tqdm import tqdm
+
+        savedir.mkdir(exist_ok=True)
+        for file in tqdm(files, desc="Saving figures"):
+            params.file = str(file)
+            params.save = f"{savedir}/{file}.png"
+            save_show(plot_cls, params, None, None)

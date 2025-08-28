@@ -22,11 +22,10 @@ def subfig(
         fo.write(
             inspect.cleandoc(
                 f"""
+                from mxmftools.utils.plot_utils import plot_from_cli_str, set_style
                 import matplotlib.pyplot as plt
 
-
-                from mxmftools.utils.plot_utils import plot_from_cli_str
-
+                set_style()
                 fig, axs = plt.subplots(nrows={rows}, ncols={cols} {share})
                 axs = axs.flat
                 """

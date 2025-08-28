@@ -7,6 +7,7 @@ import typer
 
 @dataclass
 class FigSetBase:
+    file: Annotated[str, typer.Argument(exists=True)]
     matplotlibrc: Annotated[
         Path,
         typer.Option(
@@ -132,10 +133,10 @@ class FigSetBase:
         str,
         typer.Option(
             "--save",
-            help="figure save name",
+            help="figure save name or directory",
             rich_help_panel="figure set",
         ),
-    ] = "Figure.png"
+    ] = ""
 
     from_cli: Annotated[
         bool,
