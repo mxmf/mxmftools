@@ -41,4 +41,12 @@ dev = [
     "microsoft-python-type-stubs",
     "mypy>=1.15.0",
     "pyqt6>=6.9.1",
+    "types-tqdm>=4.67.0.20250809",
 ]
+
+[tool.ty.rules]
+possibly-unresolved-reference = "error"
+
+[tool.pyright]
+typeCheckingMode = "strict"
+reportUnknownMemberType = "none"

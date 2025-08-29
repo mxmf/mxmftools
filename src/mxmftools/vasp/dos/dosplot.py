@@ -4,7 +4,7 @@ from functools import cached_property
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import figure
+from matplotlib import figure, axes
 from matplotlib.patches import Polygon
 
 from mxmftools.utils.plot_utils import AxesSet
@@ -85,7 +85,7 @@ class DosPlot(plot_utils.FigPlotBase):
         self,
         params: "DosParams",
         fig: figure.Figure,
-        ax: plt.Axes,
+        ax: axes.Axes,
     ):
         super().__init__(params, fig, ax)
         self.params, self.fig, self.ax = params, fig, ax

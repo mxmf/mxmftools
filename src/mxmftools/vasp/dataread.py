@@ -199,7 +199,9 @@ class Readvaspout:
 
 
 class ReadVasprun:
-    def __init__(self, file=Path("vasprun.xml"), auto_select_k: bool = False):
+    def __init__(
+        self, file: str | Path = Path("vasprun.xml"), auto_select_k: bool = False
+    ):
         self.file = parse(file)
         if auto_select_k:
             self.k_index = np.where(self.weights == 0)[0]

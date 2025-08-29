@@ -1,35 +1,30 @@
 import itertools
 import sys
 from functools import cached_property
-from typing import TYPE_CHECKING, final
 
 import matplotlib as mpl
-import matplotlib.pyplot as plt
+from matplotlib import axes
 
 import numpy as np
 from matplotlib import figure
 from matplotlib.collections import LineCollection
 
 from ...utils import plot_utils
-
-# from .. import vasp_utils
 from ..dataread import Readvaspout, ReadVasprun
 from .. import vasp_utils
 
-if TYPE_CHECKING:
-    from .params import BandParams
+from .params import BandParams
 
 
-@final
 class BandPlot(plot_utils.FigPlotBase):
     def __init__(
         self,
-        params: "BandParams",
+        params: BandParams,
         fig: figure.Figure,
-        ax: plt.Axes,
+        ax: axes.Axes,
     ):
         super().__init__(params, fig, ax)
-        self.params: "BandParams" = params
+        self.params: BandParams = params
         self.fig, self.ax = fig, ax
 
         self.fermi = (
@@ -260,7 +255,7 @@ class BandPlot(plot_utils.FigPlotBase):
 
 
 class BandAxesSet(plot_utils.AxesSet):
-    def __init__(self, ax: plt.Axes, parmas: "BandParams", data, xlist):
+    def __init__(self, ax: axes.Axes, parmas: BandParams, data, xlist):
         self.xlist = xlist
         self.data = data
         super().__init__(ax, parmas)

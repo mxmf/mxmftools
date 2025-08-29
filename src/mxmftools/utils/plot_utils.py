@@ -1,14 +1,10 @@
-from typing import TYPE_CHECKING, cast
 from pathlib import Path
+from typing import cast
 
-from matplotlib import colors
+from matplotlib import colors, figure, axes
 from typing_extensions import override
 
-if TYPE_CHECKING:
-    import matplotlib.pyplot as plt
-    from matplotlib import figure
-
-    from .common_params import FigSetBase, HeatFigBase
+from .common_params import FigSetBase, HeatFigBase
 
 
 class MyCustomNormalize(colors.Normalize):
@@ -23,7 +19,7 @@ class MyCustomNormalize(colors.Normalize):
         colors.Normalize.__init__(self, vmin, vmax, clip)
 
     @override
-    def __call__(self, value, clip: bool | None = None):
+    def __call__(self, value: float, clip: bool | None = None):
         vmin = cast(float, self.vmin)
         vmax = cast(float, self.vmax)
         import numpy as np
@@ -50,16 +46,16 @@ class MyCustomNormalize(colors.Normalize):
         )
         normalized_mid = 0.5
         x, y = (
-            [self.vmin, self.midpoint, self.vmax],
+            np.array([self.vmin, self.midpoint, self.vmax]),
             [normalized_min, normalized_mid, normalized_max],
         )
         return np.ma.masked_array(np.interp(value, x, y))
 
 
 class AxesSet:
-    def __init__(self, ax: "plt.Axes", params: "FigSetBase"):
-        self.ax: plt.Axes = ax
-        self.params: "FigSetBase" = params
+    def __init__(self, ax: axes.Axes, params: FigSetBase):
+        self.ax: axes.Axes = ax
+        self.params: FigSetBase = params
         self.set_title()
         self.set_labels()
         self.set_xticks()
@@ -119,16 +115,14 @@ class HeatSet:
     def __init__(
         self,
         im,
-        fig: "figure.Figure",
-        ax: "plt.Axes",
-        params: "HeatFigBase",
+        fig: figure.Figure,
+        ax: axes.Axes,
+        params: HeatFigBase,
         vmin: float,
         vmax: float,
     ) -> None:
-        import colorcet
-
         self.fig: figure.Figure = fig
-        self.ax: plt.Axes = ax
+        self.ax: axes.Axes = ax
         self.params: "HeatFigBase" = params
         self.vmin: float
         self.vmax: float
@@ -164,7 +158,9 @@ class HeatSet:
                 vmax=self.vmax,
             )
         elif self.params.norm == "TwoSlopeNorm":
-            norm = colors.TwoSlopeNorm(self.vmin, self.vcenter, self.vmax)
+            norm = colors.TwoSlopeNorm(
+                vmin=self.vmin, vcenter=self.vcenter, vmax=self.vmax
+            )
         elif self.params.norm == "PowerLaw":
             norm = colors.PowerNorm(self.params.power, self.vmin, self.vmax)
         else:
@@ -202,11 +198,12 @@ class HeatSet:
 
 
 class FigPlotBase:
-    def __init__(self, params: "FigSetBase", fig: "figure.Figure", ax: "plt.Axes"): ...
+    def __init__(self, params: FigSetBase, fig: figure.Figure, ax: axes.Axes): ...
 
 
 def set_style(rc_file: Path | None = None):
     from importlib import resources
+
     import matplotlib as mpl
 
     if rc_file is None or not rc_file.exists():
@@ -218,10 +215,11 @@ def set_style(rc_file: Path | None = None):
 
 def save_show(
     plot_cls: type[FigPlotBase],
-    params: "FigSetBase",
-    fig: "figure.Figure | None",
-    ax: "plt.Axes | None",
+    params: FigSetBase,
+    fig: figure.Figure | None,
+    ax: axes.Axes | None,
 ):
+    import colorcet  # noqa:F401
     import matplotlib.pyplot as plt
 
     if params.from_cli is False:
@@ -239,7 +237,7 @@ def save_show(
         plt.show()
 
 
-def plot_from_cli_str(str_params: str, fig, ax):
+def plot_from_cli_str(str_params: str, fig: figure.Figure, ax: axes.Axes):
     import importlib
     import shlex
 
@@ -251,7 +249,8 @@ def plot_from_cli_str(str_params: str, fig, ax):
 
     info_name = params_list[0]
     args = params_list[1:]
-    app = importlib.import_module(f"mxmftools.{info_name}.cli").app
+    module = importlib.import_module(f"mxmftools.{info_name}.cli")
+    app = getattr(module, "app")
 
     cmd: click.Command = get_command(app)
     # print(cmd.make_context(info_name, args))
