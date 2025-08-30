@@ -1,9 +1,8 @@
 import itertools
-from numpy.typing import NDArray
-
 import sys
 
 import numpy as np
+import numpy.typing as npt
 import rich
 from rich.panel import Panel
 
@@ -11,7 +10,7 @@ from .dataread import VaspData
 
 
 def get_gap(
-    eigenvalues: NDArray[np.floating],
+    eigenvalues: npt.NDArray[np.floating],
     fermi: float,
     kpoints: np.ndarray,
     stdout: bool = False,
@@ -25,7 +24,7 @@ def get_gap(
 
         if (extremum[:, 0] * extremum[:, 1]).min() > 0:
             maxs = extremum[:, 1]
-            vbm = np.count_nonzero(abs(maxs) - maxs)
+            vbm = int(np.count_nonzero(abs(maxs) - maxs))
             return vbm
         else:
             return True
@@ -39,7 +38,7 @@ def get_gap(
         return kpoints[index]
 
     ylist = eigenvalues - fermi
-    gaps = []
+    gaps: list[float] = []
     std_str = ""
 
     if stdout:
@@ -105,9 +104,9 @@ class ParsePro:
         )
         rich.print(test)
 
-    def handle(self, atom_orbital_strs) -> tuple[list[tuple[int, int]], str]:
-        result = []
-        result_str_list = []
+    def handle(self, atom_orbital_strs: str) -> tuple[list[tuple[int, int]], str]:
+        result: list[tuple[int, int]] = []
+        result_str_list: list[str] = []
         for atom_orbital_str in atom_orbital_strs.split(";"):
             ao_list, ao_str = self.__parse_atom_orbital(atom_orbital_str)
             result.extend(ao_list)
@@ -121,7 +120,7 @@ class ParsePro:
         return (result, " + ".join(result_str_list))
 
     def __parse_atom_orbital(
-        self, atom_orbital_str
+        self, atom_orbital_str: str
     ) -> tuple[list[tuple[int, int]], str]:
         if len(atom_orbital_str.split(":")) != 2:
             print(f"can't parse {atom_orbital_str}, check it!")
@@ -132,7 +131,6 @@ class ParsePro:
         atom_orbital_list = list(itertools.product(atom_list, orbital_list))
         atom_orbital_str = f"orbital {orbital_str} of atom {atom_str}"
         return (atom_orbital_list, atom_orbital_str)
-        pass
 
     def __handle_atom_str(self, atom_str: str) -> tuple[list[int], str]:
         try:
