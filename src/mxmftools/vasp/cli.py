@@ -52,10 +52,10 @@ def nbands_ewin(
 ):
     import rich
 
-    from .dataread import Readvaspout, ReadVasprun
+    from .dataread import ReadVaspout, ReadVasprun
 
     if vaspfileformat == "h5":
-        eigenvalues = Readvaspout(file).eigenvalues[spin] - fermi
+        eigenvalues = ReadVaspout(file).eigenvalues[spin] - fermi
     else:
         eigenvalues = ReadVasprun(file).eigenvalues[spin] - fermi
     emin, emax = energy_windows
@@ -98,10 +98,10 @@ def gap(
     ] = None,
 ):
     from ..vasp.vasp_utils import get_gap
-    from .dataread import Readvaspout, ReadVasprun
+    from .dataread import ReadVaspout, ReadVasprun
 
     if vaspfileformat == "h5":
-        data = Readvaspout(file)
+        data = ReadVaspout(file)
     else:
         data = ReadVasprun(file)
 

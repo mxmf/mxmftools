@@ -10,7 +10,7 @@ from matplotlib.patches import Polygon
 from mxmftools.utils.plot_utils import AxesSet
 from .. import vasp_utils
 from ...utils import plot_utils
-from ..dataread import Readvaspout, ReadVasprun
+from ..dataread import ReadVaspout, ReadVasprun, VaspData
 from .params import DosParams
 
 
@@ -97,9 +97,9 @@ class DosPlot(plot_utils.FigPlotBase):
             self.ax.legend(loc="best")
 
     @cached_property
-    def data(self) -> ReadVasprun | Readvaspout:
+    def data(self) -> VaspData:
         if self.params.vaspfileformat == "h5":
-            data = Readvaspout(self.params.file)
+            data = ReadVaspout(self.params.file)
         else:
             data = ReadVasprun(self.params.file)
         return data

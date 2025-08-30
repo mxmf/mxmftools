@@ -10,7 +10,7 @@ from matplotlib import figure
 from matplotlib.collections import LineCollection
 
 from ...utils import plot_utils
-from ..dataread import Readvaspout, ReadVasprun
+from ..dataread import ReadVaspout, ReadVasprun, VaspData
 from .. import vasp_utils
 
 from .params import BandParams
@@ -53,9 +53,9 @@ class BandPlot(plot_utils.FigPlotBase):
             self.ax.legend(*zip(*unique), loc="best")
 
     @cached_property
-    def data(self) -> ReadVasprun | Readvaspout:
+    def data(self) -> VaspData:
         if self.params.vaspfileformat == "h5":
-            data = Readvaspout(self.params.file, auto_select_k=True)
+            data = ReadVaspout(self.params.file, auto_select_k=True)
         else:
             data = ReadVasprun(self.params.file, auto_select_k=True)
         if self.params.fix_order:
@@ -99,6 +99,7 @@ class BandPlot(plot_utils.FigPlotBase):
 
     @cached_property
     def proarray_list(self):
+        self.data.projected
         # result: list[np.ndarray] = []
         result = []
         assert self.params.pro_atoms_orbitals is not None

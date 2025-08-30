@@ -2,18 +2,16 @@ import itertools
 from numpy.typing import NDArray
 
 import sys
-from typing_extensions import TYPE_CHECKING
 
 import numpy as np
 import rich
 from rich.panel import Panel
 
-if TYPE_CHECKING:
-    from .dataread import Readvaspout, ReadVasprun
+from .dataread import VaspData
 
 
 def get_gap(
-    eigenvalues: NDArray[np.float64],
+    eigenvalues: NDArray[np.floating],
     fermi: float,
     kpoints: np.ndarray,
     stdout: bool = False,
@@ -50,7 +48,7 @@ def get_gap(
     for i, spin in enumerate(ylist):
         vbm = is_metal_or_vbm(spin) if vbms is None else vbms[i]
         if stdout:
-            std_str += f"[yellow]{'='*30} {i+1}th spin {'='*30} [/yellow]\n"
+            std_str += f"[yellow]{'=' * 30} {i + 1}th spin {'=' * 30} [/yellow]\n"
         if vbm is True:
             gaps.append(0.0)
             if stdout:
@@ -75,7 +73,7 @@ def get_gap(
                 if stdout:
                     std_str += f"vbm locates at{k_vbm} of [red]{vbm}th[/red] band, vbm energy is [orange1]{vbm_energy:.6f} eV[/orange1]\n"
 
-                    std_str += f"cbm locates at {k_cbm} of [red]{vbm+1}th[/red] band, cbm energy is [orange1]{cbm_energy:.6f}[/orange1] eV\n"
+                    std_str += f"cbm locates at {k_cbm} of [red]{vbm + 1}th[/red] band, cbm energy is [orange1]{cbm_energy:.6f}[/orange1] eV\n"
                     std_str += f"band gap is {gap}\n"
     if stdout:
         rich.print(Panel(std_str))
@@ -91,12 +89,12 @@ orbitals_str_all = (
 class ParsePro:
     def __init__(
         self,
-        data: "ReadVasprun | Readvaspout",
+        data: VaspData,
         atom_orbital_str: str,
         color: str,
         index: int,
     ):
-        self.__data: "Readvaspout | ReadVasprun" = data
+        self.__data: VaspData = data
         self.__orbital_str_all = orbitals_str_all[0 : self.__data.orbital_num]
         self.result, self.result_str = self.handle(atom_orbital_str)
         test = Panel(
