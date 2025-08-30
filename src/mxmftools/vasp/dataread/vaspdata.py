@@ -229,11 +229,8 @@ class VaspData(ABC):
     @cached_property
     def orbital_num(self) -> int:
         if "dospar" in self.__dict__:
-            print("1")
             return self.dospar.shape[2]
         elif "projected" in self.__dict__:
-            print("2")
-            return self.projected.shape[3]
+            return self.projected.shape[2]
         else:
-            print("3")
             return self.dospar.shape[2]
