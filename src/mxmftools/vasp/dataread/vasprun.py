@@ -65,8 +65,7 @@ class ReadVasprun(VaspData):
     def _fermi(self) -> float:
         return float(self._get_data_str("/modeling/calculation/dos/i"))
 
-    @cached_property
-    def nbands(self) -> int:
+    def _nbands(self) -> int:
         return int(
             self._get_data_str(
                 "/modeling/parameters/separator[@name='electronic']/i[@name='NBANDS']"

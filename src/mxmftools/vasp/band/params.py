@@ -132,3 +132,7 @@ class BandParams(HeatFigBase, FigSetBase):
             help="whether show legend",
         ),
     ] = False
+
+    export: Annotated[
+        bool, typer.Option("--export/--noexport", help="whether export band data")
+    ] = True

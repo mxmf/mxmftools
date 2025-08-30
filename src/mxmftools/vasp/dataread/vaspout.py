@@ -81,6 +81,9 @@ class ReadVaspout(VaspData):
     def _fermi(self) -> float:
         return float(np.array(self.file.get("results/electron_dos/efermi")))
 
+    def _nbands(self) -> int:
+        return self.eigenvalues.shape[-1]
+
     def _eigenvalues(self) -> npt.NDArray[np.floating]:
         eigenvalues = np.array(
             self.file.get(f"results/electron_eigenvalues{self.prefix2}/eigenvalues")

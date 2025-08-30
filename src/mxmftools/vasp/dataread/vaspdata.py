@@ -44,6 +44,9 @@ class VaspData(ABC):
     def _fermi(self) -> float: ...
 
     @abstractmethod
+    def _nbands(self) -> int: ...
+
+    @abstractmethod
     def _eigenvalues(self) -> npt.NDArray[np.floating]: ...
 
     @abstractmethod
@@ -142,7 +145,7 @@ class VaspData(ABC):
     # band
     @cached_property
     def nbands(self) -> int:
-        return self.eigenvalues.shape[-1]
+        return self._nbands()
 
     @cached_property
     def eigenvalues(self) -> npt.NDArray[np.floating]:
