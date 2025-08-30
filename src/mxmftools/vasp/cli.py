@@ -17,7 +17,7 @@ def band(params: BandParams):
     from ..utils import plot_utils
     from .band.bandplot import BandPlot
 
-    return plot_utils.multi_plot(BandPlot, params)
+    return plot_utils.plot_series(BandPlot, params)
 
 
 @app.command("dos")
@@ -28,7 +28,7 @@ def dos(
     from ..utils import plot_utils
     from .dos.dosplot import DosPlot
 
-    return plot_utils.multi_plot(DosPlot, params)
+    return plot_utils.plot_series(DosPlot, params)
 
 
 @app.command("nbands_ewin")

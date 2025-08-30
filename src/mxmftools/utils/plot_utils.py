@@ -1,7 +1,10 @@
 from pathlib import Path
 from typing import cast
 
-from matplotlib import colors, figure, axes
+from matplotlib import axes, colors, figure
+from matplotlib.cm import ScalarMappable
+from matplotlib.backend_bases import KeyEvent
+
 from typing_extensions import override
 
 from .common_params import FigSetBase, HeatFigBase
@@ -19,7 +22,7 @@ class MyCustomNormalize(colors.Normalize):
         colors.Normalize.__init__(self, vmin, vmax, clip)
 
     @override
-    def __call__(self, value: float, clip: bool | None = None):
+    def __call__(self, value: float, clip: bool | None = None):  # type:ignore
         vmin = cast(float, self.vmin)
         vmax = cast(float, self.vmax)
         import numpy as np
@@ -114,7 +117,8 @@ class AxesSet:
 class HeatSet:
     def __init__(
         self,
-        im,
+        im: ScalarMappable,
+        # im: AxesImage | QuadMesh | ScalarMappable,
         fig: figure.Figure,
         ax: axes.Axes,
         params: HeatFigBase,
@@ -132,8 +136,6 @@ class HeatSet:
             self.vmin, self.vmax = vmin, vmax
         self.vcenter: float = self.params.vcenter
         self.im = im
-
-        ##
         self.set_norm()
         self.im.set_cmap(self.params.cmap)
         if self.params.colorbar:
@@ -213,13 +215,13 @@ def set_style(rc_file: Path | None = None):
         mpl.rc_file(rc_file)
 
 
-def save_show(
+def render_and_save(
     plot_cls: type[FigPlotBase],
     params: FigSetBase,
     fig: figure.Figure | None,
     ax: axes.Axes | None,
 ):
-    import colorcet  # noqa:F401
+    import colorcet  # noqa:F401  # pyright: ignore[reportUnusedImport, reportMissingTypeStubs]
     import matplotlib.pyplot as plt
 
     if params.from_cli is False:
@@ -259,7 +261,7 @@ def plot_from_cli_str(str_params: str, fig: figure.Figure, ax: axes.Axes):
     rv[0](rv[1], fig, ax)
 
 
-def multi_plot(plot_cls: type[FigPlotBase], params: "FigSetBase"):
+def plot_series(plot_cls: type[FigPlotBase], params: "FigSetBase"):
     from pathlib import Path
 
     set_style(params.matplotlibrc)
@@ -270,7 +272,7 @@ def multi_plot(plot_cls: type[FigPlotBase], params: "FigSetBase"):
     if len(files) == 0:
         raise ValueError("No files found. Ensure the file is correct.")
     elif len(files) == 1:
-        return save_show(plot_cls, params, None, None)
+        return render_and_save(plot_cls, params, None, None)
 
     else:
         if not params.from_cli:
@@ -281,32 +283,33 @@ def multi_plot(plot_cls: type[FigPlotBase], params: "FigSetBase"):
 
     if params.show:
         params.show = False
-        current_index = [0]
+        current_index = 0
         num_figures = len(files)
         fig, ax = plt.subplots()
 
-        def plot_func(files: list[Path], params: "FigSetBase", index: int):
+        def update_figure(files: list[Path], params: "FigSetBase", index: int):
             params.file = str(files[index])
             ax.clear()
-            save_show(plot_cls, params, fig, ax)
+            render_and_save(plot_cls, params, fig, ax)
             ax.set_title(f"{params.file}")
 
-        plot_func(files, params, 0)
+        update_figure(files, params, 0)
 
         fig.canvas.draw()
 
-        def on_key(event):
+        def on_key(event: KeyEvent):
+            nonlocal current_index
             if event.key in ["right", "down", "j", "l"]:
-                current_index[0] = (current_index[0] + 1) % num_figures
+                current_index = (current_index + 1) % num_figures
             elif event.key in ["left", "up", "k", "h"]:
-                current_index[0] = (current_index[0] - 1) % num_figures
+                current_index = (current_index - 1) % num_figures
             else:
                 return
 
-            plot_func(files, params, current_index[0])
+            update_figure(files, params, current_index)
             fig.canvas.draw()
 
-        fig.canvas.mpl_connect("key_press_event", on_key)
+        fig.canvas.mpl_connect("key_press_event", on_key)  # type: ignore
 
         plt.show()
     if savedir is not None:
@@ -316,4 +319,4 @@ def multi_plot(plot_cls: type[FigPlotBase], params: "FigSetBase"):
         for file in tqdm(files, desc="Saving figures"):
             params.file = str(file)
             params.save = f"{savedir}/{file}.png"
-            save_show(plot_cls, params, None, None)
+            render_and_save(plot_cls, params, None, None)
