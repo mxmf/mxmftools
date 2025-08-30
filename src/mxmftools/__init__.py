@@ -11,6 +11,3 @@ app = typer.Typer(
 
 app.add_typer(vasp_app, name="vasp")
 _ = app.command()(subfig)
-
-
-# app.add_typer(subfig_app, name="subfig")

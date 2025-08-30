@@ -8,7 +8,7 @@ app = typer.Typer(no_args_is_help=True)
 
 @app.command("subfig")
 def subfig(
-    out_file=Path("subfig.py"),
+    out_file: Path = Path("subfig.py"),
     rows: Annotated[int, typer.Argument()] = 2,
     cols: Annotated[int, typer.Argument()] = 2,
     marker: Annotated[bool, typer.Option()] = False,
