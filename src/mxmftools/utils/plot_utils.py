@@ -209,7 +209,7 @@ def set_style(rc_file: Path | None = None):
     import matplotlib as mpl
 
     if rc_file is None or not rc_file.exists():
-        with resources.path("mxmftools", "hb.style") as rc_path:
+        with resources.path("mxmftools", "mxmf.style") as rc_path:
             mpl.rc_file(rc_path)
     else:
         mpl.rc_file(rc_file)
@@ -284,29 +284,35 @@ def plot_series(plot_cls: type[FigPlotBase], params: "FigSetBase"):
     if params.show:
         params.show = False
         current_index = 0
+        path_title = True
         num_figures = len(files)
         fig, ax = plt.subplots()
 
-        def update_figure(files: list[Path], params: "FigSetBase", index: int):
+        def update_figure(
+            files: list[Path], params: "FigSetBase", index: int, path_title: bool
+        ):
             params.file = str(files[index])
             ax.clear()
             render_and_save(plot_cls, params, fig, ax)
-            ax.set_title(f"{params.file}")
+            if path_title:
+                ax.set_title(f"{params.file}")
 
-        update_figure(files, params, 0)
+        update_figure(files, params, 0, True)
 
         fig.canvas.draw()
 
         def on_key(event: KeyEvent):
-            nonlocal current_index
+            nonlocal current_index, path_title
             if event.key in ["right", "down", "j", "l"]:
                 current_index = (current_index + 1) % num_figures
             elif event.key in ["left", "up", "k", "h"]:
                 current_index = (current_index - 1) % num_figures
+            elif event.key == "t":
+                path_title = not path_title
             else:
                 return
 
-            update_figure(files, params, current_index)
+            update_figure(files, params, current_index, path_title)
             fig.canvas.draw()
 
         fig.canvas.mpl_connect("key_press_event", on_key)  # type: ignore
