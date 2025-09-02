@@ -11,6 +11,7 @@ if _t.TYPE_CHECKING:
         HeatSet,
         plot_series,
     )
+    from .cli_utils import dataclass_cli
 
 __all__ = [
     "FigSetBase",
@@ -22,6 +23,7 @@ __all__ = [
     "lazy_load_module_symbols",
     "HeatSet",
     "plot_series",
+    "dataclass_cli",
 ]
 
 lazy_load_module_symbols(
@@ -35,6 +37,7 @@ lazy_load_module_symbols(
         "lazy_load_module_symbols": ".plot_utils",
         "HeatSet": ".plot_utils",
         "plot_series": ".plot_utils",
+        "dataclass_cli": ".cli_utils",
     },
     globals(),
 )
