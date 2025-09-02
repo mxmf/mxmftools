@@ -4,7 +4,7 @@ from typing import Annotated
 import click
 import typer
 
-from mxmftools.utils.common_params import FigSetBase, HeatFigBase
+from mxmftools.utils import FigSetBase, HeatFigBase
 
 
 @dataclass

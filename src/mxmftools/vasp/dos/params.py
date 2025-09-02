@@ -3,7 +3,7 @@ from typing import Annotated
 
 import click
 
-from mxmftools.utils.common_params import FigSetBase
+from mxmftools.utils import FigSetBase
 
 
 import typer

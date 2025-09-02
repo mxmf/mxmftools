@@ -8,7 +8,7 @@ import numpy.typing as npt
 from matplotlib import axes, figure
 from matplotlib.collections import LineCollection
 
-from ...utils import plot_utils
+from mxmftools.utils import FigPlotBase, HeatSet, AxesSet
 from .. import vasp_utils
 from ..dataread import ReadVaspout, ReadVasprun
 from .params import BandParams
@@ -112,7 +112,7 @@ class BandData(ReadVaspout, ReadVasprun):
                 self.save_band(f"fatband_spin{spin}_{i}.txt", eigen, weight)
 
 
-class BandPlot(plot_utils.FigPlotBase):
+class BandPlot(FigPlotBase):
     def __init__(
         self,
         params: BandParams,
@@ -293,12 +293,12 @@ class BandPlot(plot_utils.FigPlotBase):
             pmin, pmax = self.params.vrange
 
         self.lc.set_array(lc_array)
-        plot_utils.HeatSet(self.lc, self.fig, self.ax, self.params, pmin, pmax)
+        HeatSet(self.lc, self.fig, self.ax, self.params, pmin, pmax)
         self.lc.set_capstyle("round")
         self.ax.add_collection(self.lc)
 
 
-class BandAxesSet(plot_utils.AxesSet):
+class BandAxesSet(AxesSet):
     def __init__(self, ax: axes.Axes, parmas: BandParams, data: BandData):
         self.data = data
         super().__init__(ax, parmas)

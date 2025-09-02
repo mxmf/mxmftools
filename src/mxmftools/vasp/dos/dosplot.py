@@ -8,9 +8,8 @@ import numpy as np
 from matplotlib import figure, axes, colors
 from matplotlib.patches import Polygon
 
-from mxmftools.utils.plot_utils import AxesSet
+from mxmftools.utils import AxesSet, FigPlotBase
 from .. import vasp_utils
-from ...utils import plot_utils
 from ..dataread import ReadVaspout, ReadVasprun, VaspData
 from .params import DosParams
 
@@ -87,7 +86,7 @@ def gradient_fill(
     return line, im
 
 
-class DosPlot(plot_utils.FigPlotBase):
+class DosPlot(FigPlotBase):
     def __init__(
         self,
         params: "DosParams",

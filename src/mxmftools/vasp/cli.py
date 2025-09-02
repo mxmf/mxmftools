@@ -5,8 +5,7 @@ import click
 import typer
 
 from ..utils.cli_utils import dataclass_cli
-from .band.params import BandParams
-from .dos.params import DosParams
+from . import BandParams, DosParams
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -14,10 +13,10 @@ app = typer.Typer(no_args_is_help=True)
 @app.command("band")
 @dataclass_cli
 def band(params: BandParams):
-    from ..utils import plot_utils
+    from ..utils import plot_series
     from .band.bandplot import BandPlot
 
-    return plot_utils.plot_series(BandPlot, params)
+    return plot_series(BandPlot, params)
 
 
 @app.command("dos")
@@ -25,10 +24,10 @@ def band(params: BandParams):
 def dos(
     params: DosParams,
 ):
-    from ..utils import plot_utils
-    from .dos.dosplot import DosPlot
+    from ..utils import plot_series
+    from . import DosPlot
 
-    return plot_utils.plot_series(DosPlot, params)
+    return plot_series(DosPlot, params)
 
 
 @app.command("nbands_ewin")
@@ -52,7 +51,7 @@ def nbands_ewin(
 ):
     import rich
 
-    from .dataread import ReadVaspout, ReadVasprun
+    from . import ReadVaspout, ReadVasprun
 
     if vaspfileformat == "h5":
         eigenvalues = ReadVaspout(file).eigenvalues[spin] - fermi
@@ -97,8 +96,7 @@ def gap(
         ),
     ] = None,
 ):
-    from ..vasp.vasp_utils import get_gap
-    from .dataread import ReadVaspout, ReadVasprun
+    from . import ReadVaspout, ReadVasprun, get_gap
 
     if vaspfileformat == "h5":
         data = ReadVaspout(file)
