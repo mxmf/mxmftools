@@ -92,7 +92,7 @@ class AxesSet:
         self.ax.set_xticklabels(
             self.params.xticklabels
         ) if self.params.xticklabels is not None else ...
-        self.ax.xaxis.set_minor_locator(AutoMinorLocator())
+        self.ax.xaxis.set_minor_locator(AutoMinorLocator(self.params.n_minor))
 
     def set_yticks(self):
         from matplotlib.ticker import AutoLocator, AutoMinorLocator
@@ -105,7 +105,7 @@ class AxesSet:
         self.ax.set_yticklabels(
             self.params.yticklabels
         ) if self.params.yticklabels is not None else ...
-        self.ax.yaxis.set_minor_locator(AutoMinorLocator())
+        self.ax.yaxis.set_minor_locator(AutoMinorLocator(self.params.n_minor))
 
     def hide_ticks(self):
         if self.params.hide_xticks:
@@ -203,16 +203,21 @@ class FigPlotBase:
     def __init__(self, params: FigSetBase, fig: figure.Figure, ax: axes.Axes): ...
 
 
-def set_style(rc_file: Path | None = None):
+def set_style(rc_file: Path | None = None, ncols: int = 1, nrows: int = 1):
     from importlib import resources
 
     import matplotlib as mpl
 
     if rc_file is None or not rc_file.exists():
-        with resources.path("mxmftools", "mxmf.style") as rc_path:
+        with resources.path("mxmftools", "mxmf.mplstyle") as rc_path:
             mpl.rc_file(rc_path)
     else:
         mpl.rc_file(rc_file)
+    base_size = mpl.rcParams.get("figure.figsize", [3.5433070866, 2.3622047244])
+    mpl.rcParams["figure.figsize"] = [
+        base_size[0] / 2 * ncols,
+        base_size[1] / 2 * nrows,
+    ]
 
 
 def render_and_save(

@@ -25,7 +25,7 @@ def subfig(
                 from mxmftools.utils import plot_from_cli_str, set_style
                 import matplotlib.pyplot as plt
 
-                set_style()
+                set_style(ncols={cols}, nrows={cols})
                 fig, axs = plt.subplots(nrows={rows}, ncols={cols} {share})
                 axs = axs.flat
                 """
