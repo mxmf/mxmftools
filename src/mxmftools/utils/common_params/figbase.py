@@ -8,6 +8,7 @@ import typer
 @dataclass
 class FigSetBase:
     file: Annotated[str, typer.Argument(exists=True)]
+    no_glob: Annotated[bool, typer.Option("--no-glob", "-ng")] = False
     matplotlibrc: Annotated[
         Path,
         typer.Option(

@@ -247,7 +247,7 @@ def plot_from_cli_str(str_params: str, fig: figure.Figure, ax: axes.Axes):
     from typer.main import get_command
 
     params_list = shlex.split(str_params)
-    params_list.extend(["--from_cli", "--dontshow"])
+    params_list.extend(["--from_cli", "--dontshow", "--no-glob"])
 
     info_name = params_list[0]
     args = params_list[1:]
@@ -261,14 +261,17 @@ def plot_from_cli_str(str_params: str, fig: figure.Figure, ax: axes.Axes):
     rv[0](rv[1], fig, ax)
 
 
-def plot_series(plot_cls: type[FigPlotBase], params: "FigSetBase"):
+def plot_series(plot_cls: type[FigPlotBase], params: FigSetBase):
     from pathlib import Path
 
     set_style(params.matplotlibrc)
 
     import matplotlib.pyplot as plt
 
-    files = list(Path(".").rglob(params.file))
+    if params.no_glob:
+        files = [Path(params.file)]
+    else:
+        files = list(Path(".").rglob(params.file))
     if len(files) == 0:
         raise ValueError("No files found. Ensure the file is correct.")
     elif len(files) == 1:
