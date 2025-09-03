@@ -151,6 +151,10 @@ class BandPlot(FigPlotBase):
 
     def fig_set(self):
         BandAxesSet(self.ax, self.params, self.data)
+        yticks = self.ax.yaxis.get_major_ticks()
+        for tick in yticks:
+            if np.isclose(tick.get_loc(), 0, atol=1e-6):
+                tick.tick1line.set_markersize(0)
         y_major_tick_size = mpl.rcParams["ytick.major.size"]
         self.ax.axhline(
             0,
@@ -205,7 +209,6 @@ class BandPlot(FigPlotBase):
                 zorder=2,
                 label=labels[self.params.spin],
             )
-        self.fig_set()
 
     def plot_proband(self):
         if self.params.pmode == 0:
